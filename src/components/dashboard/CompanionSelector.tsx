@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { getAllUsers } from "@/lib/actions/getUsers";
@@ -10,7 +9,7 @@ import { getAllUsers } from "@/lib/actions/getUsers";
 type User = {
   id: string;
   name: string;
-  role: "FAMILY" | "GUEST";
+  role: "ADMIN" | "FAMILY" | "GUEST";
 };
 
 export default function CompanionSelector({

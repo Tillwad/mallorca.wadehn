@@ -37,7 +37,7 @@ type Booking = {
   startDate: Date;
   endDate: Date;
   flightNumber?: string | null;
-  companions: { id: string; name: string, role: string }[];
+  companions: { id: string; name: string; role: string }[];
   createdAt: Date;
   status: "PENDING" | "CONFIRMED" | "REJECTED";
 };
@@ -78,7 +78,7 @@ export default function StayCalendar({ bookings }: { bookings: Booking[] }) {
 
       return {
         id: booking.id,
-        title: booking.companions[0] ?? "?",
+        title: booking.companions[0].name ?? "?",
         start: new Date(booking.startDate),
         end: new Date(booking.endDate),
         color,
@@ -97,8 +97,8 @@ export default function StayCalendar({ bookings }: { bookings: Booking[] }) {
         endAccessor="end"
         defaultView="month"
         views={["month"]}
-          date={date}
-  onNavigate={(newDate) => setDate(newDate)}
+        date={date}
+        onNavigate={(newDate) => setDate(newDate)}
         eventPropGetter={(event) => ({
           style: {
             backgroundColor: event.color,
@@ -122,7 +122,7 @@ export default function StayCalendar({ bookings }: { bookings: Booking[] }) {
               ) : (
                 <MdOutlineLuggage className="inline" />
               )}
-              {event.title.name}
+              {event.title}
             </span>
           ),
         }}
@@ -195,7 +195,6 @@ export default function StayCalendar({ bookings }: { bookings: Booking[] }) {
                       startDate: newStartDate,
                       endDate: newEndDate,
                       flightNumber: newFlightNumber,
-                      withUserId: newWithUserId,
                     });
 
                     setEditMode(false);
@@ -232,19 +231,6 @@ export default function StayCalendar({ bookings }: { bookings: Booking[] }) {
                   />
                 </div>
                 <div>
-                  <label className="text-sm">Begleitperson</label>
-                  <select
-                    value={newWithUserId ?? ""}
-                    onChange={(e) => setNewWithUserId(e.target.value || null)}
-                    className="w-full border px-2 py-1 rounded"
-                  >
-                    <option value="">Keine</option>
-                    {users.map((user) => (
-                      <option key={user.id} value={user.id}>
-                        {user.name}
-                      </option>
-                    ))}
-                  </select>
                 </div>
                 <div className="flex justify-between pt-2">
                   <button

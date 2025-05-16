@@ -4,18 +4,24 @@ import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 
+type User = {
+  id: string;
+  name: string;
+  role: "ADMIN" | "FAMILY" | "GUEST";
+};
+
 export async function updateBooking({
   bookingId,
   startDate,
   endDate,
   flightNumber,
-  withUserId,
+  companionIds = [],
 }: {
   bookingId: string;
   startDate: Date | string;
   endDate: Date | string;
   flightNumber?: string;
-  withUserId?: string | null;
+  companionIds?: User[]; // Nur bei FAMILY erlaubt
 }) {
   const session = await auth();
   if (!session?.user) {
@@ -36,7 +42,11 @@ export async function updateBooking({
       startDate: new Date(startDate),
       endDate: new Date(endDate),
       flightNumber: flightNumber?.trim() || null,
-      withUserId: withUserId || null,
+      companions: {
+        connect: companionIds.map((companion) => ({
+          id: companion.id,
+        })),
+      },
       status: "PENDING",
     },
   });
