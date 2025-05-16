@@ -26,7 +26,7 @@ export default function AnfragenPage() {
   const [loading, setLoading] = useState(true);
 
   async function loadBookings() {
-    const all: Booking[] = await getAllBookings();
+    const all = (await getAllBookings()) as Booking[];
     setBookings(all.filter((b) => b.status === "PENDING"));
     setRejectedBookings(all.filter((b) => b.status === "REJECTED"));
     setLoading(false);
