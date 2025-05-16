@@ -13,23 +13,23 @@ export async function middleware(req: NextRequest) {
   }
 
   const role = token.role;
+  const pathnames = {
+    "/dashboard": ["ADMIN", "FAMILY", "GUEST"],
+    "/dashboard/anfragen": ["ADMIN", "FAMILY"],
+    "/dashboard/new": ["ADMIN", "FAMILY"],
+    "/dashboard/gaeste": ["ADMIN", "FAMILY"],
+  };
 
-  if (url.pathname.startsWith("/admin") && role !== "ADMIN") {
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
-
-  if (
-    url.pathname.startsWith("/dashboard/anfragen") &&
-    !["ADMIN", "FAMILY"].includes((role || "") as string)
-  ) {
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
+  for (const [path, roles] of Object.entries(pathnames)) {
+    if (url.pathname.startsWith(path) && !roles.includes((role || "") as string)) {
+      url.pathname = "/dashboard";
+      return NextResponse.redirect(url);
+    }
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/admin/:path*", "/requests/:path*"],
+  matcher: ["/dashboard/:path*"],
 };
