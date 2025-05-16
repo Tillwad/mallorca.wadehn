@@ -20,11 +20,27 @@ export function Sidebar() {
   const [role, setRole] = useState<string | null>(null);
 
   const links = [
-    { href: "/dashboard", label: "Kalender", role: ["FAMILY", "ADMIN", "GUEST"] },
-    { href: "/dashboard/new", label: "Neuer Urlaub", role: ["FAMILY", "ADMIN"] },
+    {
+      href: "/dashboard",
+      label: "Kalender",
+      role: ["FAMILY", "ADMIN", "GUEST"],
+    },
+    {
+      href: "/dashboard/new",
+      label: "Neuer Urlaub",
+      role: ["FAMILY", "ADMIN"],
+    },
     { href: "/dashboard/gaeste", label: "Gäste", role: ["FAMILY", "ADMIN"] },
-    { href: "/dashboard/anfragen", label: "Anfragen", role: ["FAMILY", "ADMIN"] },
-    { href: "/dashboard/urlaub-anfragen", label: "Urlaubsanfragen", role: ["GUEST", "ADMIN"] },
+    {
+      href: "/dashboard/anfragen",
+      label: "Anfragen",
+      role: ["FAMILY", "ADMIN"],
+    },
+    {
+      href: "/dashboard/urlaub-anfragen",
+      label: "Urlaubsanfragen",
+      role: ["GUEST", "ADMIN"],
+    },
   ];
 
   useEffect(() => {
@@ -45,7 +61,9 @@ export function Sidebar() {
       <aside
         className={cn(
           "bg-white border-r flex flex-col justify-between p-6 md:w-64 min-h-screen transition-transform duration-200 ease-in-out z-50",
-          isOpen ? "translate-x-0 fixed top-0 left-0 w-64 h-full" : "-translate-x-full fixed top-0 left-0 w-64 h-full md:translate-x-0 md:static"
+          isOpen
+            ? "translate-x-0 fixed top-0 left-0 w-64 h-full"
+            : "-translate-x-full fixed top-0 left-0 w-64 h-full md:translate-x-0 md:static"
         )}
       >
         <div>
@@ -77,6 +95,13 @@ export function Sidebar() {
           </Button>
         </form>
       </aside>
+
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          onClick={() => setIsOpen(false)}
+        />
+      )}
     </>
   );
 }

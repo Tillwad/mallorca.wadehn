@@ -16,7 +16,7 @@ type Booking = {
   endDate: Date;
   flightNumber?: string | null;
   companions: { id: string; name: string }[];
-  createdAt: string;
+  createdAt: Date;
   status: "PENDING" | "CONFIRMED" | "REJECTED";
 };
 
