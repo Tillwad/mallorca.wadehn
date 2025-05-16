@@ -9,7 +9,7 @@ export async function updateBookingStatus({
   newStatus,
 }: {
   bookingId: string;
-  newStatus: "CONFIRMED" | "REJECTED";
+  newStatus: "CONFIRMED" | "REJECTED" | "PENDING";
 }) {
   const session = await auth();
   if (!session?.user || !["ADMIN", "FAMILY"].includes(session.user.role)) {

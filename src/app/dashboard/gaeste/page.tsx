@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 
+import { FaRegTrashAlt } from "react-icons/fa";
+
 type User = {
   id: string;
   name: string;
@@ -79,8 +81,9 @@ export default function GästePage() {
           onClick={() => {
             // Handle delete action here
           }}
+          className="cursor-pointer"
         >
-          Löschen
+          <FaRegTrashAlt className="text-white" />
         </Button>
       ),
     }
@@ -90,8 +93,11 @@ export default function GästePage() {
     <div className="p-6 max-w-4xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold">Gästeverwaltung</h1>
-        <Button onClick={() => setShowForm(!showForm)}>
+        <Button onClick={() => setShowForm(!showForm)} className="hidden md:block cursor-pointer">
           {showForm ? "Formular schließen" : "Neuen Gast anlegen"}
+        </Button>
+        <Button onClick={() => setShowForm(!showForm)} className="md:hidden block cursor-pointer">
+          {showForm ? "X" : "+"}
         </Button>
       </div>
 

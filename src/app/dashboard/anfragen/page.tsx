@@ -5,8 +5,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 
 import { DataTable } from "@/components/ui/data-table";
-import { getVisibleBookings } from "@/lib/actions/getBookings";
+import { getAllBookings } from "@/lib/actions/getBookings";
 import { updateBookingStatus } from "@/lib/actions/updateBookingStatus";
+import { deleteBooking } from "@/lib/actions/deleteBooking";
 
 type Booking = {
   id: string;
@@ -21,19 +22,21 @@ type Booking = {
 
 export default function AnfragenPage() {
   const [bookings, setBookings] = useState<Booking[]>([]);
+  const [rejectedBookings, setRejectedBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
+  async function loadBookings() {
+    const all: Booking[] = await getAllBookings();
+    setBookings(all.filter((b) => b.status === "PENDING"));
+    setRejectedBookings(all.filter((b) => b.status === "REJECTED"));
+    setLoading(false);
+  }
+
   useEffect(() => {
-    async function load() {
-      const all = await getVisibleBookings();
-      const pending = all.filter((b: Booking) => b.status === "PENDING");
-      setBookings(pending);
-      setLoading(false);
-    }
-    load();
+    loadBookings();
   }, []);
 
-  const columns: ColumnDef<Booking>[] = [
+  const baseColumns: ColumnDef<Booking>[] = [
     {
       header: "Ersteller",
       accessorFn: (row) => row.user.name,
@@ -51,13 +54,14 @@ export default function AnfragenPage() {
       accessorKey: "flightNumber",
     },
     {
-      header: "Begleitpersonen",
-      accessorFn: (row) => row.companions.map((c) => c.name).join(", "),
-    },
-    {
       header: "Erstellt am",
-      accessorFn: (row) => format(new Date(row.createdAt), "dd.MM.yyyy HH:mm"),
+      accessorFn: (row) =>
+        format(new Date(row.createdAt), "dd.MM.yyyy HH:mm"),
     },
+  ];
+
+  const columnsWithActions: ColumnDef<Booking>[] = [
+    ...baseColumns,
     {
       header: "Aktion",
       cell: ({ row }) => {
@@ -70,12 +74,7 @@ export default function AnfragenPage() {
                   bookingId: booking.id,
                   newStatus: "CONFIRMED",
                 });
-                // Nachladen der Liste
-                const all = await getVisibleBookings();
-                const pending = all.filter(
-                  (b: Booking) => b.status === "PENDING"
-                );
-                setBookings(pending);
+                await loadBookings();
               }}
               className="px-2 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
             >
@@ -87,11 +86,7 @@ export default function AnfragenPage() {
                   bookingId: booking.id,
                   newStatus: "REJECTED",
                 });
-                const all = await getVisibleBookings();
-                const pending = all.filter(
-                  (b: Booking) => b.status === "PENDING"
-                );
-                setBookings(pending);
+                await loadBookings();
               }}
               className="px-2 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
             >
@@ -103,14 +98,62 @@ export default function AnfragenPage() {
     },
   ];
 
+const columnsRejected: ColumnDef<Booking>[] = [
+    ...baseColumns,
+    {
+      header: "Aktion",
+      cell: ({ row }) => {
+        const booking = row.original;
+        return (
+          <div className="flex gap-2">
+            <button
+              onClick={async () => {
+                await updateBookingStatus({
+                  bookingId: booking.id,
+                  newStatus: "PENDING",
+                });
+                await loadBookings();
+              }}
+              className="px-2 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700"
+            >
+              Zurücknehmen
+            </button>
+            <button
+              onClick={async () => {
+                await deleteBooking(
+                  booking.id
+                );
+                await loadBookings();
+              }}
+              className="px-2 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+            >
+              Löschen
+            </button>
+          </div>
+        );
+      },
+    },
+  ];
+
   return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Offene Buchungsanfragen</h1>
-      {loading ? (
-        <p>Lade Daten...</p>
-      ) : (
-        <DataTable columns={columns} data={bookings} />
-      )}
+    <div className="p-6 space-y-10">
+      <div>
+        <h1 className="text-2xl font-bold mb-4">Offene Buchungsanfragen</h1>
+        {loading ? (
+          <p>Lade Daten...</p>
+        ) : (
+          <DataTable columns={columnsWithActions} data={bookings} />
+        )}
+      </div>
+
+      <div>
+        <h2 className="text-xl font-semibold mb-4">Abgelehnte Buchungen</h2>
+        {loading ? (
+          <p>Lade Daten...</p>
+        ) : (
+          <DataTable columns={columnsRejected} data={rejectedBookings} />
+        )}
+      </div>
     </div>
   );
 }

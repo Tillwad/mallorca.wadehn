@@ -46,3 +46,20 @@ export async function getVisibleBookings() {
 
   return bookings;
 }
+
+export async function getAllBookings() {
+  const session = await auth();
+  if (!session?.user) return [];
+
+  const bookings = await prisma.booking.findMany({
+    include: {
+      user: true, // Ersteller
+      companions: true, // Alle Mitreisenden
+    },
+    orderBy: {
+      startDate: "asc",
+    },
+  });
+
+  return bookings;
+}

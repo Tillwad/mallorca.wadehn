@@ -10,6 +10,7 @@ import { deleteBooking } from "@/lib/actions/deleteBooking";
 import { getAllUsers } from "@/lib/actions/getUsers";
 import { getCurrentUserRole } from "@/lib/actions/getCurrent";
 import { MdOutlineFamilyRestroom, MdOutlineLuggage } from "react-icons/md";
+import { usePathname } from "next/navigation";
 
 const localizer = dateFnsLocalizer({
   format,
@@ -53,6 +54,8 @@ export default function StayCalendar({ bookings }: { bookings: Booking[] }) {
   const [users, setUsers] = useState<{ id: string; name: string }[]>([]);
   const [isUpdating, startUpdate] = useTransition();
   const [role, setRole] = useState<string | null>(null);
+  const pathname = usePathname();
+  const [date, setDate] = useState(new Date());
 
   useEffect(() => {
     getAllUsers().then(setUsers);
@@ -94,6 +97,8 @@ export default function StayCalendar({ bookings }: { bookings: Booking[] }) {
         endAccessor="end"
         defaultView="month"
         views={["month"]}
+          date={date}
+  onNavigate={(newDate) => setDate(newDate)}
         eventPropGetter={(event) => ({
           style: {
             backgroundColor: event.color,

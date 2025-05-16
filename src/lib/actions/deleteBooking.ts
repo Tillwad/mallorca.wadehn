@@ -6,22 +6,31 @@ import { redirect } from "next/navigation";
 
 export async function deleteBooking(bookingId: string) {
   const session = await auth();
-  if (!session?.user) {
-    throw new Error("Nicht eingeloggt.");
-  }
-
   if (!session?.user?.id) {
-    throw new Error("User-ID fehlt in der Session.");
+    throw new Error("Nicht eingeloggt oder keine User-ID.");
   }
 
-  console.log("Session:", session);
-  console.log("User ID:", session?.user?.id);
+  const booking = await prisma.booking.findUnique({
+    where: { id: bookingId },
+    include: { companions: true }, // optional für Logging oder Prüfung
+  });
 
-  await prisma.booking.delete({
-    where: {
-      id: bookingId,
+  if (!booking) {
+    throw new Error("Buchung existiert nicht oder wurde bereits gelöscht.");
+  }
+
+  // Verknüpfungen löschen (z. B. bei many-to-many)
+  await prisma.booking.update({
+    where: { id: bookingId },
+    data: {
+      companions: { set: [] },
+      // travelers: { set: [] }, // falls vorhanden
     },
   });
 
-  redirect("/dashboard");
+  await prisma.booking.delete({
+    where: { id: bookingId },
+  });
+
+  redirect("/anfragen");
 }
