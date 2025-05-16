@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  FAMILY
+  GUEST
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+}
+
+model User {
+  id           String    @id @default(uuid())
+  email        String    @unique
+  passwordHash String
+  name         String
+  role         Role      @default(GUEST)
+  mustChangePassword Boolean @default(true)
+
+  bookings     Booking[] @relation("BookingsCreated") // Buchungen, die der User selbst erstellt hat
+  companionOf  Booking[] @relation("BookingCompanions") // Buchungen, bei denen der User Begleitung ist
+
+  createdAt DateTime @default(now())
+}
+
+model Booking {
+  id           String   @id @default(uuid())
+  userId       String
+  user         User     @relation("BookingsCreated", fields: [userId], references: [id])
+  startDate    DateTime
+  endDate      DateTime
+  flightNumber String?
+
+  companions   User[]   @relation("BookingCompanions")
+  status       BookingStatus @default(PENDING)
+  createdAt    DateTime      @default(now())
+}
