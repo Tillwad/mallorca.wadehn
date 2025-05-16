@@ -34,11 +34,11 @@ type CalendarEvent = {
 type Booking = {
   id: string;
   user: { id: string; name: string; role: string };
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   flightNumber?: string | null;
   companions: { id: string; name: string, role: string }[];
-  createdAt: string;
+  createdAt: Date;
   status: "PENDING" | "CONFIRMED" | "REJECTED";
 };
 
