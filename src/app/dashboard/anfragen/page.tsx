@@ -12,8 +12,8 @@ import { deleteBooking } from "@/lib/actions/deleteBooking";
 type Booking = {
   id: string;
   user: { id: string; name: string };
-  startDate: string;
-  endDate: string;
+  startDate: Date;
+  endDate: Date;
   flightNumber?: string | null;
   companions: { id: string; name: string }[];
   createdAt: string;
@@ -26,9 +26,9 @@ export default function AnfragenPage() {
   const [loading, setLoading] = useState(true);
 
   async function loadBookings() {
-    const all = (await getAllBookings()) as Booking[];
-    setBookings(all.filter((b) => b.status === "PENDING"));
-    setRejectedBookings(all.filter((b) => b.status === "REJECTED"));
+    const all = await getAllBookings();
+    setBookings(all.filter((b: Booking) => b.status === "PENDING"));
+    setRejectedBookings(all.filter((b: Booking) => b.status === "REJECTED"));
     setLoading(false);
   }
 
