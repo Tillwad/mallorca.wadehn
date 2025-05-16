@@ -29,6 +29,7 @@ export async function loginAction(
       password,
       redirect: false,
     });
+    console.log("✅ Login erfolgreich:", user);
     if (user.mustChangePassword) {
       return { redirectTo: "/passwort-aendern" };
     }
