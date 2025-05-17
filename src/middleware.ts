@@ -20,13 +20,17 @@ export async function middleware(req: NextRequest) {
   // ✅ 2. Token vorhanden → Rolle extrahieren
   const role = token.role as string;
 
+  if (pathname === "/login" && token) {
+    url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
   // 🔒 3. Seiten und erlaubte Rollen
   const roleRules: Record<string, string[]> = {
     "/dashboard/anfragen": ["ADMIN", "FAMILY"],
     "/dashboard/new": ["ADMIN", "FAMILY"],
     "/dashboard/gaeste": ["ADMIN", "FAMILY"],
     "/dashboard/urlaub-anfragen": ["GUEST", "ADMIN"],
-    // "/dashboard" ist allgemein erlaubt für alle Rollen
   };
 
   // 4. Zugriff prüfen auf geschützte Unterpfade
