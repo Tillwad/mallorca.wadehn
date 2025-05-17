@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { getToken } from "next-auth/jwt";
+import { auth } from "@/auth";
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({
@@ -8,22 +9,23 @@ export async function middleware(req: NextRequest) {
     secret: process.env.AUTH_SECRET as string,
   });
 
+  const session = await auth();
+
   const url = req.nextUrl.clone();
   const pathname = url.pathname;
 
   // 🔐 1. Kein Token → redirect zu /login
-  if (!token) {
+  if (!session || !token) {
     url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+  else if (pathname === "/login") {
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 
   // ✅ 2. Token vorhanden → Rolle extrahieren
   const role = token.role as string;
-
-  if (pathname === "/login" && token) {
-    url.pathname = "/dashboard";
-    return NextResponse.redirect(url);
-  }
 
   // 🔒 3. Seiten und erlaubte Rollen
   const roleRules: Record<string, string[]> = {
@@ -48,5 +50,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*"],
+  matcher: ["/dashboard", "/dashboard/:path*"],
 };

@@ -1,9 +1,12 @@
 import { auth } from "@/auth";
 import { Sidebar } from "@/components/dashboard/sidebar";
+import { redirect } from "next/navigation";
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
-  const role = session?.user?.role;
+export default async function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
