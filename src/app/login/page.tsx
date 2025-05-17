@@ -17,6 +17,7 @@ export default function LoginPage() {
   useEffect(() => {
     if (!isPending && state && "redirectTo" in state) {
       router.push(state.redirectTo);
+      router.refresh(); 
     }
   }, [isPending, state, router]);
 
