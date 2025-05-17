@@ -62,6 +62,7 @@ export const authConfig: NextAuthConfig = {
       return session;
     },
   },
+  useSecureCookies: true,
   secret: process.env.AUTH_SECRET,
   trustHost: true,
 };
