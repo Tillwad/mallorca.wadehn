@@ -59,10 +59,10 @@ export default function HomePage() {
           <GiPalmTree className="inline-block text-4xl md:text-6xl ml-2" />
         </h1>
         <p className="text-lg md:text-xl mb-8 max-w-xl drop-shadow-md">
-          Koordiniere deine Urlaube und Aufenthalte mit der ganzen Familie
+          Wadehn's planen ihren nächsten Aufenthalt auf Mallorca
         </p>
         <Link href="/login">
-          <Button className="text-white bg-blue-600 hover:bg-blue-700 px-6 py-3 text-lg rounded-full shadow-lg">
+          <Button className="text-white bg-black hover:opacity-50 px-6 py-3 text-lg rounded-full shadow-lg">
             Jetzt einloggen
           </Button>
         </Link>
