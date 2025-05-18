@@ -8,17 +8,17 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 
 const images = [
-  "/malle_1.jpg",
-  "/malle_2.jpg",
-  "/malle_3.jpg",
-  "/malle_4.jpg",
-  "/malle_5.jpg",
-  "/malle_6.jpg",
-  "/malle_7.jpg",
-  "/malle_8.jpg",
-  "/malle_9.jpg",
-  "/malle_10.jpg",
-  "/malle_11.jpg",
+  "/malle1.jpg",
+  "/malle2.jpg",
+  "/malle3.jpg",
+  "/malle4.jpg",
+  "/malle5.jpg",
+  "/malle6.jpg",
+  "/malle7.jpg",
+  "/malle8.jpg",
+  "/malle9.jpg",
+  "/malle10.jpg",
+  "/malle11.jpg",
 ];
 
 export default function HomePage() {
