@@ -3,7 +3,13 @@
 
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { useEffect, useMemo, useState, useTransition, useCallback } from "react";
+import {
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+  useCallback,
+} from "react";
 import { format, parse, startOfWeek, getDay } from "date-fns";
 import { de } from "date-fns/locale";
 import { MdOutlineFamilyRestroom, MdOutlineLuggage } from "react-icons/md";
@@ -22,7 +28,13 @@ type CalendarEvent = {
   personen: string[];
 };
 
-const localizer = dateFnsLocalizer({ format, parse, startOfWeek, getDay, locales: { de } });
+const localizer = dateFnsLocalizer({
+  format,
+  parse,
+  startOfWeek,
+  getDay,
+  locales: { de },
+});
 
 export default function StayCalendar() {
   const [bookings, setBookings] = useState<Booking[]>([]);
@@ -58,30 +70,30 @@ export default function StayCalendar() {
         const name = booking.personen[0]?.toLowerCase();
         switch (name) {
           case "lutz":
-        color = "#f87171"; // rot
-        break;
+            color = "#f87171"; // rot
+            break;
           case "conny":
-        color = "#34d399"; // grün
-        break;
+            color = "#34d399"; // grün
+            break;
           case "leo":
-        color = "#60a5fa"; // blau
-        break;
+            color = "#60a5fa"; // blau
+            break;
           case "till":
-        color = "#fbbf24"; // gelb
-        break;
+            color = "#a78bfa"; // lila
+            break;
           case "bennet":
-        color = "#a78bfa"; // lila
-        break;
+            color = "#fbbf24"; // gelb
+            break;
           default:
-        color = "#facc15"; // Standardfarbe
+            color = "#facc15"; // Standardfarbe
         }
       }
       return {
         id: booking.id,
         title:
-          (booking.personen?.[0] && booking.personen?.[1])
-        ? `${booking.personen[0]} & ${booking.personen[1]}`
-        : booking.personen?.[0] || booking.personen?.[1] || "Unbekannt",
+          booking.personen?.[0] && booking.personen?.[1]
+            ? `${booking.personen[0]} & ${booking.personen[1]}`
+            : booking.personen?.[0] || booking.personen?.[1] || "Unbekannt",
         start: new Date(booking.startDate),
         end: new Date(booking.endDate),
         color,
