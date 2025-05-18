@@ -44,7 +44,7 @@ export default function BookingDetailsModal({
     const confirmed = confirm("Möchtest du diese Buchung wirklich löschen?");
     if (!confirmed) return;
 
-    await fetch(`/api/booking/${selectedEvent.id}/delete`, {
+    await fetch(`/api/booking/${selectedEvent.id}`, {
       method: "DELETE",
     });
 
@@ -58,7 +58,7 @@ export default function BookingDetailsModal({
     if (!newStartDate || !newEndDate) return;
 
     startUpdate(async () => {
-      await fetch(`/api/booking/${selectedEvent.id}/update`, {
+      await fetch(`/api/booking/${selectedEvent.id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
