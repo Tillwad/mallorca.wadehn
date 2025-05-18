@@ -51,7 +51,31 @@ export default function StayCalendar() {
 
   const events = useMemo(() => {
     return bookings.map((booking) => {
-      const color = booking.guest ? "#3b82f6" : "#facc15";
+      let color = "#facc15";
+      if (booking.guest) {
+        color = "#3b82f6";
+      } else if (booking.personen && booking.personen.length > 0) {
+        const name = booking.personen[0]?.toLowerCase();
+        switch (name) {
+          case "lutz":
+        color = "#f87171"; // rot
+        break;
+          case "conny":
+        color = "#34d399"; // grün
+        break;
+          case "leo":
+        color = "#60a5fa"; // blau
+        break;
+          case "till":
+        color = "#fbbf24"; // gelb
+        break;
+          case "bennet":
+        color = "#a78bfa"; // lila
+        break;
+          default:
+        color = "#facc15"; // Standardfarbe
+        }
+      }
       return {
         id: booking.id,
         title:

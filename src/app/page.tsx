@@ -61,7 +61,7 @@ export default function HomePage() {
         <p className="text-lg md:text-xl mb-8 max-w-xl drop-shadow-md">
           Wadehn's planen ihren nächsten Aufenthalt auf Mallorca
         </p>
-        <Link href="/login">
+        <Link href="/dashboard">
           <Button className="text-white bg-black hover:opacity-50 px-6 py-3 text-lg rounded-full shadow-lg">
             Jetzt einloggen
           </Button>
