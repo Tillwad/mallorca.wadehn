@@ -1,75 +1,107 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { getAllUsers } from "@/lib/actions/getUsers";
+import { Input } from "../ui/input";
+import { useState } from "react";
 
-type User = {
-  id: string;
-  name: string;
-  role: "ADMIN" | "FAMILY" | "GUEST";
-};
+const FIXED_PERSONEN = ["Lutz", "Conny", "Leo", "Till", "Bennet"];
+
+// Hilfsfunktion für sortierte Reihenfolge
+function sortSelectedIds(ids: string[]): string[] {
+  const fixed = FIXED_PERSONEN.filter((name) => ids.includes(name));
+  const rest = ids.filter((name) => !FIXED_PERSONEN.includes(name));
+  return [...fixed, ...rest];
+}
 
 export default function CompanionSelector({
   selectedIds,
   setSelectedIds,
+  guest,
 }: {
   selectedIds: string[];
   setSelectedIds: (ids: string[]) => void;
+  guest: boolean;
 }) {
-  const [users, setUsers] = useState<User[]>([]);
-  const [roleFilter, setRoleFilter] = useState<string>("ALL");
+  const [guestName, setGuestName] = useState("");
 
-  useEffect(() => {
-    getAllUsers().then(setUsers);
-  }, []);
+  const toggleSelection = (name: string) => {
+    if (!name.trim()) return;
 
-  const filteredUsers =
-    roleFilter === "ALL"
-      ? users
-      : users.filter((u) => u.role === roleFilter);
-
-
-  const toggleSelection = (id: string) => {
-    if (selectedIds.includes(id)) {
-      setSelectedIds(selectedIds.filter((uid) => uid !== id));
+    if (selectedIds.includes(name)) {
+      setSelectedIds(sortSelectedIds(selectedIds.filter((n) => n !== name)));
     } else {
-      setSelectedIds([...selectedIds, id]);
+      setSelectedIds(sortSelectedIds([...selectedIds, name]));
     }
+  };
+
+  const handleGuestNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setGuestName(e.target.value);
+  };
+
+  const handleGuestNameAdd = () => {
+    const trimmed = guestName.trim();
+    if (trimmed && !selectedIds.includes(trimmed)) {
+      setSelectedIds(sortSelectedIds([...selectedIds, trimmed]));
+    }
+    setGuestName("");
   };
 
   return (
     <div className="space-y-4">
-      <Label>Personen auswählen</Label>
-
-      <Select onValueChange={(value) => setRoleFilter(value)} defaultValue="ALL">
-        <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Rolle filtern" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="ALL">Alle</SelectItem>
-          <SelectItem value="FAMILY">Family</SelectItem>
-          <SelectItem value="GUEST">Guest</SelectItem>
-        </SelectContent>
-      </Select>
-
-      <div className="max-h-64 overflow-auto border rounded">
-        {filteredUsers.map((user) => (
+      <Label>Mitreisende Personen</Label>
+      <div className="border rounded max-h-64 overflow-auto">
+        {FIXED_PERSONEN.map((name) => (
           <label
-            key={user.id}
+            key={name}
             className="flex items-center gap-2 px-4 py-2 border-b last:border-b-0 hover:bg-muted/50 cursor-pointer"
           >
             <Checkbox
-              checked={selectedIds.includes(user.id)}
-              onCheckedChange={() => toggleSelection(user.id)}
+              checked={selectedIds.includes(name)}
+              onCheckedChange={() => toggleSelection(name)}
+              disabled={guest}
             />
-            <span className="font-medium">{user.name}</span>
-            <span className="text-sm text-muted-foreground ml-auto">{user.role}</span>
+            <span className="font-medium">{name}</span>
           </label>
         ))}
+
+        {/* Benutzerdefinierte Namen (z. B. Gast) */}
+        {selectedIds
+          .filter((name) => !FIXED_PERSONEN.includes(name))
+          .map((name) => (
+            <label
+              key={name}
+              className="flex items-center gap-2 px-4 py-2 border-b last:border-b-0 hover:bg-muted/50 cursor-pointer"
+            >
+              <Checkbox
+                checked
+                onCheckedChange={() => toggleSelection(name)}
+                disabled={guest}
+              />
+              <span className="font-medium italic">{name}</span>
+            </label>
+          ))}
       </div>
+
+      {/* Gastnamenfeld */}
+
+        <div className="flex gap-2">
+          <Input
+            type="text"
+            placeholder="Gastname hinzufügen..."
+            value={guestName}
+            onChange={handleGuestNameChange}
+            className="w-full"
+          />
+          <button
+            type="button"
+            onClick={handleGuestNameAdd}
+            className="cursor-pointer bg-blue-500 text-white px-4 rounded hover:bg-blue-600"
+          >
+            +
+          </button>
+        </div>
+
     </div>
   );
 }
