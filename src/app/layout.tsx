@@ -11,7 +11,6 @@ export const metadata: Metadata = {
   generator: "Next.js",
   applicationName: "Mallorca Planer",
   referrer: "origin-when-cross-origin",
-  colorScheme: "light",
   creator: "Till Wadehn",
   publisher: "Till Wadehn",
   description: "Koordiniere Urlaube auf Mallorca mit Familie und Freunden.",
