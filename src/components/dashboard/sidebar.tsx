@@ -3,11 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Menu } from "lucide-react";
 import { GiPalmTree } from "react-icons/gi";
-import { se } from "date-fns/locale";
 import { useRouter } from "next/navigation";
 
 type SidebarProps = {

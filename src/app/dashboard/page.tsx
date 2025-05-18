@@ -1,15 +1,5 @@
 import StayCalendar from "@/components/dashboard/StayCalendar";
 
-type Booking = {
-  id: string;
-  startDate: string;
-  endDate: string;
-  flightNumber?: string | null;
-  personen: string[];
-  guest: boolean;
-  createdAt: string;
-};
-
 export default async function DashboardPage() {
   return (
     <main className="max-w-4xl mx-auto mt-10 px-4 space-y-6">
