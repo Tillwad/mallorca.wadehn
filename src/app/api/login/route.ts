@@ -11,9 +11,6 @@ export async function POST(req: NextRequest) {
   const email = data.get("email") as string;
   const password = data.get("password") as string;
 
-  console.log("LOGIN_EMAIL", USER.email);
-  console.log("LOGIN_PASSWORD_HASH", USER.passwordHash);
-
   if (!USER.email || !USER.passwordHash) {
     return NextResponse.json({ error: "Serverfehler: Login nicht konfiguriert" }, { status: 500 });
   }

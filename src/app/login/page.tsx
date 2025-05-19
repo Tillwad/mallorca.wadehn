@@ -21,6 +21,8 @@ export default function LoginPage() {
     });
 
     if (res.ok) {
+      const redirect = new URLSearchParams(window.location.search).get("redirect") || "/dashboard";
+      window.location.href = redirect;
       router.push("/dashboard");
     } else {
       const data = await res.json();
