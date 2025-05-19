@@ -7,7 +7,7 @@ export function middleware(request: NextRequest) {
   const isLoggedIn = authCookie?.value === "true";
 
   // Liste der geschützten Pfade
-  const protectedRoutes = ["/dashboard", "/dashboard/new"];
+  const protectedRoutes = ["/dashboard", "/dashboard/new", "/login"];
 
   const pathname = request.nextUrl.pathname;
 
@@ -17,6 +17,11 @@ export function middleware(request: NextRequest) {
 
   if (isProtected && !isLoggedIn) {
     const loginUrl = new URL("/login", request.url);
+    return NextResponse.redirect(loginUrl);
+  }
+
+  if (isProtected && isLoggedIn) {
+    const loginUrl = new URL("/dashboard", request.url);
     return NextResponse.redirect(loginUrl);
   }
 
