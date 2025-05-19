@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
   const res = NextResponse.json({ success: true });
   res.cookies.set("auth", "true", {
-    httpOnly: true,
+    httpOnly: false,
     path: "/",
     maxAge: 60 * 60 * 24,
   });
