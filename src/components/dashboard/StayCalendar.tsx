@@ -31,7 +31,7 @@ type CalendarEvent = {
 const localizer = dateFnsLocalizer({
   format,
   parse,
-  startOfWeek: (date) => startOfWeek(date, { weekStartsOn: 1 }),
+  startOfWeek: (date:Date) => startOfWeek(date, { weekStartsOn: 1, locale: de }),
   getDay,
   locales: { de },
 });
